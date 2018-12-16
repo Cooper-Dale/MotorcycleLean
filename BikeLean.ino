@@ -6,6 +6,7 @@
 #include <Wire.h>
 #include <math.h>
 #include <LiquidCrystal_I2C.h>
+// to bude jiný display  OLED
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7,3,POSITIVE);  // Set the correct LCD I2C address. Some 0x3F, some 0x27
 
 //declare variables
@@ -35,13 +36,13 @@ char accel[5];
 char maxAngle[5];
 char maxAccel[5];
 
-// declare functions  
+// declare functions
 void getA();
 void getTemp();
 void calibration();
 void getAraw();
 void alignment();
-void calibrateAraw(); 
+void calibrateAraw();
 
 void getStheta(int average); // averages "average" number of values before it returns
 void setups();
@@ -58,28 +59,28 @@ void loop() {
 
   getStheta(250);
   g = 100*az/G;
-  
-  if (abs(g) > abs(maxG)) {  
+
+  if (abs(g) > abs(maxG)) {
     maxG = g; gTime = millis();
   }
-  
+
   if (abs(theta) > abs(maxTheta)) {
     maxTheta = theta; thetaTime = millis();
-  }  
-  
+  }
+
   if (millis() - gTime > timeOut) maxG = 0;
   if (millis() - thetaTime > timeOut) maxTheta = 0;
 
   sprintf(angle, "%i%c", theta, ((char) 223) );
   sprintf(accel, "%i%s", -g, "'g");
-  sprintf(maxAngle, "%i%c", maxTheta, ((char) 223) );  
-  sprintf(maxAccel, "%i%s", -maxG, "'g");   
-  
+  sprintf(maxAngle, "%i%c", maxTheta, ((char) 223) );
+  sprintf(maxAccel, "%i%s", -maxG, "'g");
+
   lcd.setCursor(5, 0); lcd.print(angle); lcd.print("   ");
   lcd.setCursor(11,0); lcd.print(accel); lcd.print("   ");
   lcd.setCursor(5, 1); lcd.print(maxAngle); lcd.print("   ");
-  lcd.setCursor(11,1); lcd.print(maxAccel); lcd.print("   ");  
-  
+  lcd.setCursor(11,1); lcd.print(maxAccel); lcd.print("   ");
+
   if (buttonPressed()) changeTimeout();
-  
+
 }// end loop
